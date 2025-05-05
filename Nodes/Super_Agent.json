@@ -1,0 +1,325 @@
+{
+  "name": "Super_Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are **SuperAgent**, the AI orchestrator of all tools and sub-agents. Your job is to:\n\n1. **Interpret** the user’s request in plain language.  \n2. **Select** one or more specialized agents—EmailAgent, EmailDataAgent, CalendarAgent, CalendarDataAgent, SerpApi, etc.—and the exact operation each must perform.  \n3. **Validate** that each chosen operation has all required parameters; if any are missing, ask the user **only** for those specific fields.  \n4. **Plan** a sequence of calls: data lookups (via DataAgents) before actions (via ActionAgents), chaining as needed.  \n5. **Output** a single JSON “plan” object with an ordered list of agent calls and their parameters, or a single “ask” object requesting missing inputs.  \n\n_Always respond with **only** JSON; never execute actions yourself._  \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -500,
+        -60
+      ],
+      "id": "d3520f0d-4c00-478b-a644-e26c97e1dcbd",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "name": "EMAIL_AGENT",
+        "workflowId": {
+          "__rl": true,
+          "value": "Dn0tFnrqmTfBi3W7",
+          "mode": "list",
+          "cachedResultName": "Email_Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -660,
+        260
+      ],
+      "id": "eaf2c55f-8e8e-43f6-902e-ad45cb684363",
+      "name": "EMAIL_AGENT"
+    },
+    {
+      "parameters": {
+        "name": "CALENDER_AGENT",
+        "workflowId": {
+          "__rl": true,
+          "value": "ICOiHSzRdrJg2tFv",
+          "mode": "list",
+          "cachedResultName": "Calender_Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -260,
+        260
+      ],
+      "id": "ae0f1cbd-5bf2-4ca3-9f29-a000fe49b690",
+      "name": "CALENDER_AGENT"
+    },
+    {
+      "parameters": {
+        "name": "CALENDER_DATA_AGENT",
+        "workflowId": {
+          "__rl": true,
+          "value": "ICOiHSzRdrJg2tFv",
+          "mode": "list",
+          "cachedResultName": "Calender_Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -60,
+        260
+      ],
+      "id": "a749cc47-c325-44c9-a111-9e6cb9f1074a",
+      "name": "CALENDER_DATA_AGENT"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        100,
+        260
+      ],
+      "id": "a81bf85d-fe47-4104-a2d0-c63dee9b79b6",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "KxZ5i89EzMzCXkwA",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "daa5972d-00aa-4444-8738-6e65640a020f",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -700,
+        -60
+      ],
+      "id": "cd357d90-e563-4a62-a426-e0149315249f",
+      "name": "Webhook",
+      "webhookId": "daa5972d-00aa-4444-8738-6e65640a020f"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -140,
+        -60
+      ],
+      "id": "ad777b0e-b90d-43a3-9561-2412e943cb10",
+      "name": "format_response"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        -60
+      ],
+      "id": "7c539328-5fb8-414d-8f2d-1e015858476c",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "name": "EMAIL_DATA_AGENT",
+        "workflowId": {
+          "__rl": true,
+          "value": "Dn0tFnrqmTfBi3W7",
+          "mode": "list",
+          "cachedResultName": "Email_Agent"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -460,
+        260
+      ],
+      "id": "c536ec6f-1931-4d39-8e1e-6f953300029b",
+      "name": "EMAIL_DATA_AGENT1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -840,
+        260
+      ],
+      "id": "b994500f-f201-4693-964c-986067b1a3f1",
+      "name": "Super Agent1",
+      "credentials": {
+        "openAiApi": {
+          "id": "L5T1ezxrdu8d35Kp",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "EMAIL_AGENT": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CALENDER_AGENT": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CALENDER_DATA_AGENT": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EMAIL_DATA_AGENT1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Super Agent1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c65de433-0106-4ff2-bd3d-ba3098d26feb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1d37186917cdc42f4edf5e3ddeb30cf570acf00b476d455a5785655053d28170"
+  },
+  "id": "9xoP0BA0sTHMokRS",
+  "tags": []
+}

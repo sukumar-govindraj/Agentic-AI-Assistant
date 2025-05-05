@@ -1,0 +1,15 @@
+{
+    "gmail_get_many": {
+        "MessageID": "",
+        "Limit": 3,
+        "Return_all": "True/False",
+        "Filters": "",
+        "Include_Spam_and_Trash": "",
+        "Label Names or IDs": "",
+        "Search": "",
+        "Read Status": "// Unread and read emails, Unread emails only, Unread and read emails",
+        "Sender": "",
+        "Received Before": "",
+        "Received After": ""
+    }
+}

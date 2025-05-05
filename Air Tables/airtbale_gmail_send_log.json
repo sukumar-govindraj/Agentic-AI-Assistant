@@ -1,0 +1,17 @@
+{
+    "gmail_send": {
+        "To": "",
+        "Subject": "",
+        "Message": "",
+        "Options": [
+            {
+                "BCC": "",
+                "CC": "",
+                "SenderName": "",
+                "SendRepliesTo": "",
+                "ReplyToSenderOnly": "",
+                "Attachments": ""
+            }
+        ]
+    }
+}

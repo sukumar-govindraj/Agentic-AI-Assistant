@@ -1,0 +1,399 @@
+{
+  "name": "Calender_Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are **CalendarAgent**, the gateway to Google Calendar.\n\n1. **Operations** (choose exactly one per request):\n   - `Create_Event`\n   - `Delete_Event`\n   - `Get_Event`\n   - `Get_Many_Event`\n   - `Update_Event`\n\n2. **Schemas** (timestamps in RFC3339 ISO format):\n   ```jsonc\n   // Create a new event\n   {\n     \"Create_Event\": {\n       \"CalendarId\": \"<calendar ID>\",\n       \"Summary\": \"<text>\",\n       \"Start\": \"YYYY-MM-DDThh:mm:ssZ\",\n       \"End\":   \"YYYY-MM-DDThh:mm:ssZ\",\n       \"UseDefaultReminders\": \"true/false\",\n       \"Additional_Fields\": {\n         \"AllDay\": \"true/false\",\n         \"Attendees\": [\"a@x.com\",\"b@y.com\"],\n         \"Location\": \"<text>\",\n         \"ColorId\": \"<color ID>\",\n         \"ConferenceData\": { \"Type\": \"<conference type>\" },\n         \"Visibility\": \"public/private\",\n         \"Recurrence\": [\"RRULE:FREQ=DAILY;COUNT=5\"],\n         \"GuestsCanModify\": \"true/false\",\n         \"GuestsCanInviteOthers\": \"true/false\"\n       }\n     }\n   }\n   // Delete an existing event\n   {\n     \"Delete_Event\": {\n       \"CalendarId\": \"<calendar ID>\",\n       \"EventId\": \"<event ID>\",\n       \"Options\": { \"SendUpdates\": \"all/external/none\" }\n     }\n   }\n   // Retrieve one event\n   {\n     \"Get_Event\": {\n       \"CalendarId\": \"<calendar ID>\",\n       \"EventId\": \"<event ID>\",\n       \"Options\": {\n         \"MaxAttendees\": <number>,\n         \"TimeZone\": \"<IANA timezone>\"\n       }\n     }\n   }\n   // Retrieve multiple events\n   {\n     \"Get_Many_Event\": {\n       \"CalendarId\": \"<calendar ID>\",\n       \"ReturnAll\": \"true/false\",\n       \"After\":  \"YYYY-MM-DDThh:mm:ssZ\",\n       \"Before\": \"YYYY-MM-DDThh:mm:ssZ\",\n       \"Options\": {\n         \"OrderBy\": \"startTime/updated\",\n         \"Fields\": \"items(id,status,summary)\",\n         \"ShowDeleted\": \"true/false\",\n         \"TimeZone\": \"UTC\"\n       }\n     }\n   }\n   // Update an existing event\n   {\n     \"Update_Event\": {\n       \"CalendarId\": \"<calendar ID>\",\n       \"EventId\": \"<event ID>\",\n       \"UseDefaultReminders\": \"true/false\",\n       \"Update_Fields\": {\n         \"Summary\": \"<text>\",\n         \"Start\": \"YYYY-MM-DDThh:mm:ssZ\",\n         \"End\":   \"YYYY-MM-DDThh:mm:ssZ\",\n         \"Description\": \"<text>\",\n         \"ColorId\": \"<color ID>\",\n         \"Recurrence\": [\"<RRULE strings>\"],\n         \"Attendees\": [\"a@x.com\",\"b@y.com\"],\n         \"GuestsCanModify\": \"true/false\",\n         \"GuestsCanInviteOthers\": \"true/false\"\n       }\n     }\n   }\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -300,
+        -100
+      ],
+      "id": "c7224aab-d185-4e77-9407-27e0d92ad225",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -300,
+        160
+      ],
+      "id": "6ac5cc53-11b0-487e-b27f-cd804ad11491",
+      "name": "Calender_Agent",
+      "credentials": {
+        "openAiApi": {
+          "id": "L5T1ezxrdu8d35Kp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "updateFields": {
+          "allday": "no",
+          "attendeesUi": {
+            "values": {
+              "mode": "replace",
+              "attendees": [
+                "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', ``, 'string') }}",
+                "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', ``, 'string') }}"
+              ]
+            }
+          },
+          "color": "1",
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "guestsCanInviteOthers": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guests_Can_Invite_Others', ``, 'boolean') }}",
+          "guestsCanModify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guests_Can_Modify', ``, 'boolean') }}",
+          "guestsCanSeeOtherGuests": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guests_Can_See_Other_Guests', ``, 'boolean') }}",
+          "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', ``, 'string') }}",
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "maxAttendees": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Max_Attendees', ``, 'number') }}",
+          "repeatHowManyTimes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repeat_How_Many_Times_', ``, 'number') }}",
+          "repeatUntil": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repeat_Until', ``, 'string') }}",
+          "rrule": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RRULE', ``, 'string') }}",
+          "showMeAs": "opaque",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+          "visibility": "default"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        -140,
+        160
+      ],
+      "id": "d5f3bcf6-56c1-42f6-8d90-8b48e97aed2a",
+      "name": "Create_Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Ep2V7XeTodguu01G",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {
+          "sendUpdates": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        160
+      ],
+      "id": "6a13764b-b54a-46fe-985f-8ab028d77a59",
+      "name": "Delete_Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Ep2V7XeTodguu01G",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        140,
+        160
+      ],
+      "id": "19666c41-d158-4aed-8e16-34ffc1dd78c8",
+      "name": "Get_Many_Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Ep2V7XeTodguu01G",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {
+          "maxAttendees": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Max_Attendees', ``, 'number') }}",
+          "returnNextInstance": false,
+          "timeZone": {
+            "__rl": true,
+            "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Timezone', ``, 'string') }}",
+            "mode": "id",
+            "__regex": "([-+/_a-zA-Z0-9]*)"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        280,
+        160
+      ],
+      "id": "dba6a81e-b91f-4543-98b6-8e29f9789309",
+      "name": "Get_Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Ep2V7XeTodguu01G",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "updateFields": {
+          "allday": "no",
+          "attendeesUi": {
+            "values": {
+              "mode": "replace",
+              "attendees": [
+                "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', ``, 'string') }}",
+                "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', ``, 'string') }}"
+              ]
+            }
+          },
+          "color": "1",
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+          "guestsCanInviteOthers": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guests_Can_Invite_Others', ``, 'boolean') }}",
+          "guestsCanModify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guests_Can_Modify', ``, 'boolean') }}",
+          "guestsCanSeeOtherGuests": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Guests_Can_See_Other_Guests', ``, 'boolean') }}",
+          "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', ``, 'string') }}",
+          "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location', ``, 'string') }}",
+          "maxAttendees": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Max_Attendees', ``, 'number') }}",
+          "repeatFrecuency": "",
+          "repeatHowManyTimes": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repeat_How_Many_Times_', ``, 'number') }}",
+          "repeatUntil": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Repeat_Until', ``, 'string') }}",
+          "rrule": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('RRULE', ``, 'string') }}",
+          "sendUpdates": "all",
+          "showMeAs": "opaque",
+          "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}",
+          "visibility": "default"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        160
+      ],
+      "id": "f61799b4-dba3-47a2-909c-e7d8b10d383a",
+      "name": "Update_Event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Ep2V7XeTodguu01G",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -520,
+        -100
+      ],
+      "id": "accd4884-9e25-4fb7-b863-9ac7c8786b1f",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        60,
+        -100
+      ],
+      "id": "2c555294-3d90-434b-b028-e64e0f5b3087",
+      "name": "format_response"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        280,
+        -100
+      ],
+      "id": "3b191146-2026-4452-872a-642b7d52e013",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Calender_Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create_Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete_Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Many_Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update_Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "23ef032b-1812-46d5-be13-6e3f80686fbc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1d37186917cdc42f4edf5e3ddeb30cf570acf00b476d455a5785655053d28170"
+  },
+  "id": "ICOiHSzRdrJg2tFv",
+  "tags": []
+}

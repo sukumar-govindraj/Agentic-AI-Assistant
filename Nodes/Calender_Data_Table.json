@@ -1,0 +1,314 @@
+{
+  "name": "Calender Data Table",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -20,
+        340
+      ],
+      "id": "6b8354b1-6e48-4cf0-97f4-daddb6f3b24f",
+      "name": "Calender Data Agent",
+      "credentials": {
+        "openAiApi": {
+          "id": "L5T1ezxrdu8d35Kp",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -160,
+        0
+      ],
+      "id": "b3768e0a-6041-4767-b435-64a970d630ad",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are **CalendarDataAgent**, the sole interface to our Airtable “Calendar_Log” table.\n\n1. **Operations** (choose exactly one):\n   - `Search_Calendar_Log`\n   - `Create_Calendar_Log`\n   - `Upsert_Calendar_Log`\n   - `Delete_Calendar_Log`\n\n2. **Schema** (all values are strings unless noted):\n   - **recordId**           (Airtable record ID)\n   - **CalendarAction**     (`create` / `update` / `delete` / `get`)\n   - **EventId**            (Google Calendar event ID)\n   - **User**               (user’s email)\n   - **Timestamp**          (ISO 8601 timestamp)\n   - **Details**            (JSON string with action-specific metadata)\n\n3. **Behavior**:\n   - For **Search_Calendar_Log**, accept any subset of fields as filters and return:\n     ```json\n     { \"Search_Calendar_Log\": { /* filter fields */ } }\n     ```\n   - For **Create_Calendar_Log** or **Upsert_Calendar_Log**, require all non-null schema fields; return the new or updated record’s `recordId`.\n   - For **Delete_Calendar_Log**, require only `recordId`; return a confirmation or clear error.\n   - **Never** invoke any Google Calendar API—only manipulate **Airtable**.\n   - If a **required** field is missing, ask the user **only** for that field.\n   - **Output** exactly one JSON object matching the chosen operation schema—no extra text.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        60,
+        0
+      ],
+      "id": "3b92f257-39e8-400c-b357-cda09570c073",
+      "name": "Calender Data Node"
+    },
+    {
+      "parameters": {
+        "operation": "deleteRecord",
+        "base": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Base', ``, 'string') }}",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table', ``, 'string') }}",
+          "mode": "id"
+        },
+        "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Record_ID', ``, 'string') }}"
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        400,
+        340
+      ],
+      "id": "4f59d974-175f-490e-88fe-894dbb48f32e",
+      "name": "delete_calender_event",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "gjRLDhy7pot1kEZo",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Base', ``, 'string') }}",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table', ``, 'string') }}",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        220,
+        340
+      ],
+      "id": "f9f7f7da-1db6-416d-8183-baafbcfe59aa",
+      "name": "create_calender_event",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "gjRLDhy7pot1kEZo",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Base', ``, 'string') }}",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table', ``, 'string') }}",
+          "mode": "id"
+        },
+        "filterByFormula": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filter_By_Formula', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        600,
+        340
+      ],
+      "id": "cf750f4e-7e27-45b1-a0e3-3cfc302f024c",
+      "name": "calender_search_event",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "gjRLDhy7pot1kEZo",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Base', ``, 'string') }}",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Table', ``, 'string') }}",
+          "mode": "id"
+        },
+        "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Record_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2.1,
+      "position": [
+        840,
+        340
+      ],
+      "id": "6f1f50cd-8dbc-49d0-90c1-ef11cec4a20d",
+      "name": "delete_calender_event1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "gjRLDhy7pot1kEZo",
+          "name": "Airtable Personal Access Token account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        640,
+        0
+      ],
+      "id": "5cb00a39-f85e-4f3d-a464-f2c211a9cc11",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        420,
+        0
+      ],
+      "id": "423ec68b-6cb2-4ad4-bb2b-f1b5037e86b3",
+      "name": "format_response"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Calender Data Agent": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calender Data Node",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Calender Data Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_calender_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calender Data Node",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_calender_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calender Data Node",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "calender_search_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calender Data Node",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delete_calender_event1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calender Data Node",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calender Data Node": {
+      "main": [
+        [
+          {
+            "node": "format_response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "format_response": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "54a7c933-e93a-4f8a-b3bf-30d23753aea2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1d37186917cdc42f4edf5e3ddeb30cf570acf00b476d455a5785655053d28170"
+  },
+  "id": "pKrqdLqSZiFUgl0g",
+  "tags": []
+}
